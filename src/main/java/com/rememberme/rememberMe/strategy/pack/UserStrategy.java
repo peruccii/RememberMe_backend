@@ -15,7 +15,7 @@ import java.util.List;
  * <p>
  * The {@code UserValidations} class uses various password validation strategies implemented in the {@code PasswordStrategy} interface. These strategies check for minimum character length, presence of lowercase and uppercase characters, special characters, and numeric characters.
  * </p>
- *
+ * @author Eduardo Perucci
  * @version 1.0
  * @since 2024-07-22
  */

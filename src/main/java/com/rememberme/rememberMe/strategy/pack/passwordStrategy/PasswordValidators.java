@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * such as minimum length, presence of uppercase and lowercase characters, numeric characters,
  * and special characters.
  * </p>
- *
+ * @author Eduardo Perucci
  * @version 1.0
  * @since 2024-07-22
  */

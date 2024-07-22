@@ -35,6 +35,8 @@ public class Task {
 
     private String description;
 
+    private String coast;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

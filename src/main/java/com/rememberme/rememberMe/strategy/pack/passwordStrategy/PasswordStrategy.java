@@ -18,7 +18,7 @@ import java.util.List;
  *     <li>Presence of at least one special character</li>
  * </ul>
  * </p>
- *
+ * @author Eduardo Perucci
  * @version 1.0
  * @since 2024-07-22
  */
