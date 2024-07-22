@@ -20,5 +20,5 @@ public class Folder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
-    private String name;
+    private String title;
 }
