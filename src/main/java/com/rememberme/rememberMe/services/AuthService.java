@@ -32,6 +32,7 @@ public class AuthService {
         if (user.isEmpty() || !user.get().isAuthCorrect(authPayload, bCryptPasswordEncoder))
             throw new BadCredentialsException("EMAIL OR PASSWORD INCORRECT");
 
+
         var claims = JwtClaimsSet.builder()
                 .issuer("remember_me")
                 .subject(user.get().getId().toString())
