@@ -1,14 +1,19 @@
 package com.rememberme.rememberMe.strategy.pack;
 
 import com.rememberme.rememberMe.domain.User;
+import com.rememberme.rememberMe.exceptions.DataAlreadyExistsException;
+import com.rememberme.rememberMe.exceptions.DataBadRequestExcpetion;
+import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
 import com.rememberme.rememberMe.repositories.IUserRepository;
 import com.rememberme.rememberMe.strategy.pack.passwordStrategy.PasswordStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Class {@code UserStrategy} manages all user-related strategies.
@@ -39,7 +44,7 @@ public class UserStrategy {
         }
 
         @Override
-        public List<String> validate(String password) {
+        public void validate(String password) {
             List<String> failures = new ArrayList<>();
 
             this.passwordStrategy.minCharactersValidator(password, failures);
@@ -48,13 +53,16 @@ public class UserStrategy {
             this.passwordStrategy.specialCharacterValidator(password, failures);
             this.passwordStrategy.numberCharacterValidator(password, failures);
 
-            return failures;
+           throw new DataBadRequestExcpetion(failures);
         }
 
         @Override
-        public User validateIfUserExists(String email) {
-            return this.userRepository.findByEmail(email).orElseThrow(() ->
-                    new BadCredentialsException("EMAIL OR PASSWORD IS INCORRECT"));
+        public void validateIfUserExists(String email) {
+            Optional<User> responseUser = this.userRepository.findByEmail(email);
+            responseUser.ifPresent(event -> {
+                throw new DataAlreadyExistsException("USER ALREADY EXISTS IN DATABASE");
+            });
         }
+
     }
 }
