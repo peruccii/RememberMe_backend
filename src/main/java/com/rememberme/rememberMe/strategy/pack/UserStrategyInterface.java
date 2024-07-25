@@ -1,5 +1,7 @@
 package com.rememberme.rememberMe.strategy.pack;
 
+import com.rememberme.rememberMe.domain.User;
+
 import java.util.List;
 
 /**
@@ -21,4 +23,12 @@ public interface UserStrategyInterface {
      * @param password the password to validate
      */
     List<String> validate(String password);
+
+    /**
+     * Validates the given email according to specific criteria.
+     *
+     * @param email is used to verify if the user exists in UserRepository
+     */
+
+    User validateIfUserExists(String email);
 }

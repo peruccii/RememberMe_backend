@@ -1,9 +1,14 @@
 package com.rememberme.rememberMe.services;
 
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
+import com.rememberme.rememberMe.dtos.UserRequestDTO;
 import com.rememberme.rememberMe.presenters.AuthResponsePresenter;
+import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
+import com.rememberme.rememberMe.presenters.UserResponsePresenter;
 import com.rememberme.rememberMe.repositories.IUserRepository;
+import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,9 +26,30 @@ public class AuthService {
     private IUserRepository userRepository;
 
     @Autowired
+    private UserStrategyInterface userStrategyInterface;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
     @Autowired
     private JwtEncoder jwtEncoder;
+
+    public ResponseEntity<UserResponsePresenter> createUser(UserRequestDTO userPayload) {
+        this.userStrategyInterface.validateIfUserExists(userPayload.email());
+        var validatePassword = this.userStrategyInterface.validate(userPayload.password());
+
+        if (validatePassword.isEmpty()) {
+            var user = this.userRepository.save(userPayload.toUser());
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponsePresenter(
+                    user.getId(),
+                    user.getName(),
+                    user.getEmail()
+            ));
+        }
+
+        return ResponseEntity.badRequest().body(new PasswordFailurePresenter(validatePassword));
+    }
 
 
     public ResponseEntity<AuthResponsePresenter> authenticate(AuthRequestDTO authPayload) {

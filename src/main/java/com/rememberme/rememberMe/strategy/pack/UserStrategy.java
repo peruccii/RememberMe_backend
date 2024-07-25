@@ -1,6 +1,10 @@
 package com.rememberme.rememberMe.strategy.pack;
 
+import com.rememberme.rememberMe.domain.User;
+import com.rememberme.rememberMe.repositories.IUserRepository;
 import com.rememberme.rememberMe.strategy.pack.passwordStrategy.PasswordStrategy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +29,9 @@ public class UserStrategy {
     @Service
     public static class UserValidations implements UserStrategyInterface {
 
+        @Autowired
+        private IUserRepository userRepository;
+
         private final PasswordStrategy passwordStrategy;
 
         public UserValidations(PasswordStrategy passwordStrategy) {
@@ -42,6 +49,12 @@ public class UserStrategy {
             this.passwordStrategy.numberCharacterValidator(password, failures);
 
             return failures;
+        }
+
+        @Override
+        public User validateIfUserExists(String email) {
+            return this.userRepository.findByEmail(email).orElseThrow(() ->
+                    new BadCredentialsException("EMAIL OR PASSWORD IS INCORRECT"));
         }
     }
 }
