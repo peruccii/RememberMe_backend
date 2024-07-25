@@ -1,3 +1,5 @@
+
+
 package com.rememberme.rememberMe.domain;
 
 import jakarta.persistence.*;
@@ -19,7 +21,7 @@ import java.util.UUID;
  * @since 2024-07-22
  */
 
-@Table(name = "task")
+@Table(name = "tb_task")
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,8 +30,8 @@ import java.util.UUID;
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     private String name;
 
@@ -37,7 +39,17 @@ public class Task {
 
     private String coast;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "alert_id")
+    private Alert alert;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "folder_id")
+    private Folder folder;
 }
+
+

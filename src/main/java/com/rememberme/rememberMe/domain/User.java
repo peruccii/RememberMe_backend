@@ -1,12 +1,19 @@
+
+
+
+
 package com.rememberme.rememberMe.domain;
 
+import com.rememberme.rememberMe.dtos.AuthRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -20,16 +27,15 @@ import java.util.UUID;
  * @since 2024-07-22
  */
 
-@Table(name = "user")
+@Table(name = "tb_user")
 @Entity
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
@@ -42,4 +48,20 @@ public class User {
 
     private BigDecimal balance = BigDecimal.ZERO;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks;
+
+    public User(String name, String email, String password, BigDecimal balance) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.balance = balance;
+    }
+
+    public User() {
+    }
+
+    public boolean isAuthCorrect(AuthRequestDTO authRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(authRequest.password(), this.password);
+    }
 }

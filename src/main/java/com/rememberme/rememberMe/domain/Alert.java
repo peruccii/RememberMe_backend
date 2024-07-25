@@ -1,3 +1,4 @@
+
 package com.rememberme.rememberMe.domain;
 
 import jakarta.persistence.*;
@@ -58,3 +59,7 @@ public class Alert {
         }
     }
 }
+
+
+
+
