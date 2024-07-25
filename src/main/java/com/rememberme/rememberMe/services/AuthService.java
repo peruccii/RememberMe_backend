@@ -36,21 +36,16 @@ public class AuthService {
 
     public ResponseEntity<UserResponsePresenter> createUser(UserRequestDTO userPayload) {
         this.userStrategyInterface.validateIfUserExists(userPayload.email());
-        var validatePassword = this.userStrategyInterface.validate(userPayload.password());
+        this.userStrategyInterface.validate(userPayload.password());
 
-        if (validatePassword.isEmpty()) {
-            var user = this.userRepository.save(userPayload.toUser());
+        var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponsePresenter(
-                    user.getId(),
-                    user.getName(),
-                    user.getEmail()
-            ));
-        }
-
-        return ResponseEntity.badRequest().body(new PasswordFailurePresenter(validatePassword));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponsePresenter(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        ));
     }
-
 
     public ResponseEntity<AuthResponsePresenter> authenticate(AuthRequestDTO authPayload) {
         var user = userRepository.findByEmail(authPayload.email());
@@ -67,6 +62,6 @@ public class AuthService {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok(new AuthResponsePresenter(jwtValue, 300l));
+        return ResponseEntity.ok(new AuthResponsePresenter(jwtValue, 300L));
     }
 }

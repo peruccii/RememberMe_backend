@@ -1,5 +1,7 @@
 package com.rememberme.rememberMe.advice;
 
+import com.rememberme.rememberMe.exceptions.RememberMeExceptions;
+import com.rememberme.rememberMe.presenters.RuntimeExcpetionPresenter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +35,11 @@ public class ApplicationExceptionHandler {
        });
 
        return errorMap;
+    }
+
+    @ExceptionHandler(RememberMeExceptions.class)
+    public RuntimeExcpetionPresenter handleRememberMeException(RememberMeExceptions e) {
+        return e.toProblemDetail();
     }
 
     // TODO: OTHER METHODS

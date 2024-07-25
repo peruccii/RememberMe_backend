@@ -2,8 +2,12 @@
 package com.rememberme.rememberMe.controller;
 
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
+import com.rememberme.rememberMe.dtos.UserRequestDTO;
 import com.rememberme.rememberMe.presenters.AuthResponsePresenter;
+import com.rememberme.rememberMe.presenters.UserResponsePresenter;
 import com.rememberme.rememberMe.services.AuthService;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -24,8 +28,14 @@ public class TokenController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<AuthResponsePresenter> auth(@RequestBody AuthRequestDTO authPayload) {
+    public ResponseEntity<AuthResponsePresenter> auth(@RequestBody @Valid  AuthRequestDTO authPayload) {
         return this.authService.authenticate(authPayload);
+    }
+
+    @Transactional
+    @PostMapping("/user")
+    public ResponseEntity<UserResponsePresenter> create(@RequestBody @Valid  UserRequestDTO userPayload) {
+        return this.authService.createUser(userPayload);
     }
 
 }
