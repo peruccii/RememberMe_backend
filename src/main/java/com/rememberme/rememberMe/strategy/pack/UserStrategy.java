@@ -53,7 +53,8 @@ public class UserStrategy {
             this.passwordStrategy.specialCharacterValidator(password, failures);
             this.passwordStrategy.numberCharacterValidator(password, failures);
 
-           throw new DataBadRequestExcpetion(failures);
+            if (!failures.isEmpty()) throw new DataBadRequestExcpetion(failures.toString());
+
         }
 
         @Override
@@ -63,6 +64,5 @@ public class UserStrategy {
                 throw new DataAlreadyExistsException("USER ALREADY EXISTS IN DATABASE");
             });
         }
-
     }
 }

@@ -2,11 +2,13 @@ package com.rememberme.rememberMe.services;
 
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
 import com.rememberme.rememberMe.dtos.UserRequestDTO;
+import com.rememberme.rememberMe.exceptions.DataNotFoundExcpetion;
 import com.rememberme.rememberMe.presenters.AuthResponsePresenter;
 import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
 import com.rememberme.rememberMe.presenters.UserResponsePresenter;
 import com.rememberme.rememberMe.repositories.IUserRepository;
 import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,17 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+
+/**
+ * Service class {@code AuthService} is responsible for handling user authentication and creation.
+ * <p>
+ *  It provides methods to create a new user and authenticate an existing user using JWT.
+ * </p>
+ *
+ * @author Eduardo Perucci
+ * @version 1.0
+ * @since 2024-07-22
+ */
 
 @Service
 public class AuthService {
@@ -34,7 +47,7 @@ public class AuthService {
     @Autowired
     private JwtEncoder jwtEncoder;
 
-    public ResponseEntity<UserResponsePresenter> createUser(UserRequestDTO userPayload) {
+    public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) {
         this.userStrategyInterface.validateIfUserExists(userPayload.email());
         this.userStrategyInterface.validate(userPayload.password());
 
@@ -51,7 +64,7 @@ public class AuthService {
         var user = userRepository.findByEmail(authPayload.email());
 
         if (user.isEmpty() || !user.get().isAuthCorrect(authPayload, bCryptPasswordEncoder))
-            throw new BadCredentialsException("EMAIL OR PASSWORD INCORRECT");
+            throw new DataNotFoundExcpetion("EMAIL OR PASSWORD INCORRECT");
 
 
         var claims = JwtClaimsSet.builder()

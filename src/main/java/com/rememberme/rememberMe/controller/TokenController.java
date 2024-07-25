@@ -15,7 +15,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Class {@code TokenController} is responsible for handling authentication and user creation.
+ * <p>
+ *  It contains specific methods for authentication and user creation using authentication services.
+ * </p>
+ *
+ * @author Eduardo Perucci
+ * @version 1.0
+ * @since 2024-07-22
+ */
+
 @RestController
+
 public class TokenController {
 
     private final JwtEncoder jwtEncoder;
@@ -27,14 +39,22 @@ public class TokenController {
         this.jwtEncoder = jwtEncoder;
     }
 
+    /**
+     * Authenticates a user with the provided credentials.
+     * @return a response containing the authentication token
+     */
     @PostMapping("/auth")
-    public ResponseEntity<AuthResponsePresenter> auth(@RequestBody @Valid  AuthRequestDTO authPayload) {
+    public ResponseEntity<AuthResponsePresenter> auth(@Valid @RequestBody AuthRequestDTO authPayload) {
         return this.authService.authenticate(authPayload);
     }
 
+    /**
+     * Creates a new user with the provided data.
+     * @return a response containing the created user's information
+     */
     @Transactional
     @PostMapping("/user")
-    public ResponseEntity<UserResponsePresenter> create(@RequestBody @Valid  UserRequestDTO userPayload) {
+    public ResponseEntity<UserResponsePresenter> create(@Valid @RequestBody UserRequestDTO userPayload) {
         return this.authService.createUser(userPayload);
     }
 

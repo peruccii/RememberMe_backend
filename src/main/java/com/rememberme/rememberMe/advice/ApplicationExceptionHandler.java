@@ -1,8 +1,9 @@
 package com.rememberme.rememberMe.advice;
 
 import com.rememberme.rememberMe.exceptions.RememberMeExceptions;
-import com.rememberme.rememberMe.presenters.RuntimeExcpetionPresenter;
+import com.rememberme.rememberMe.presenters.RuntimeExceptionPresenter;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,19 +27,19 @@ import java.util.Map;
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException ex) {
+    public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException ex)  {
        Map<String, String> errorMap = new HashMap<>();
        ex.getBindingResult().getFieldErrors().forEach(error -> {
            errorMap.put(error.getField(), error.getDefaultMessage());
        });
 
-       return errorMap;
+      return errorMap;
     }
 
     @ExceptionHandler(RememberMeExceptions.class)
-    public RuntimeExcpetionPresenter handleRememberMeException(RememberMeExceptions e) {
+    public ResponseEntity<RuntimeExceptionPresenter> handleRememberMeException(RememberMeExceptions e) {
         return e.toProblemDetail();
     }
 
