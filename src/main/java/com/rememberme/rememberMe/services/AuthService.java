@@ -35,20 +35,26 @@ import java.time.Instant;
 @Service
 public class AuthService {
 
-    @Autowired
-    private IUserRepository userRepository;
 
-    @Autowired
-    private UserStrategyInterface userStrategyInterface;
+    private final IUserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    private JwtEncoder jwtEncoder;
+    private final  UserStrategyInterface userStrategyInterface;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
+    private final JwtEncoder jwtEncoder;
+
+    public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+        this.userRepository = userRepository;
+        this.userStrategyInterface = userStrategyInterface;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.jwtEncoder = jwtEncoder;
+    }
 
     public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) {
-        this.userStrategyInterface.validateIfUserExists(userPayload.email());
+        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
         this.userStrategyInterface.validate(userPayload.password());
 
         var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
@@ -70,11 +76,11 @@ public class AuthService {
         var claims = JwtClaimsSet.builder()
                 .issuer("remember_me")
                 .subject(user.get().getId().toString())
-                .expiresAt(Instant.now().plusSeconds(300L))
+                .expiresAt(Instant.now().plusSeconds(3000L))
                 .issuedAt(Instant.now()).build();
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok(new AuthResponsePresenter(jwtValue, 300L));
+        return ResponseEntity.ok(new AuthResponsePresenter(jwtValue, 3000L));
     }
 }
