@@ -10,8 +10,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 public class DataBadRequestExcpetion extends RememberMeExceptions {
     private final String detail;
 
-    private MethodArgumentNotValidException ex;
-
     public DataBadRequestExcpetion(String detail) {
         this.detail = detail;
     }
@@ -23,9 +21,6 @@ public class DataBadRequestExcpetion extends RememberMeExceptions {
         pb.setTitle("BAD REQUEST DATA");
         pb.setDetail(detail);
 
-        if (this.ex.hasFieldErrors()) {
-            ex.getBindingResult().getFieldErrors();
-        }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RuntimeExceptionPresenter(
                 pb.getTitle(),

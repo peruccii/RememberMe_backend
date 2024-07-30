@@ -32,11 +32,11 @@ public class TokenController {
 
     private final JwtEncoder jwtEncoder;
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
-    public TokenController(JwtEncoder jwtEncoder) {
+    public TokenController(JwtEncoder jwtEncoder, AuthService authService) {
         this.jwtEncoder = jwtEncoder;
+        this.authService = authService;
     }
 
     /**

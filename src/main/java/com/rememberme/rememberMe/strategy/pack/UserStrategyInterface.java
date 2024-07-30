@@ -1,5 +1,10 @@
 package com.rememberme.rememberMe.strategy.pack;
 
+import com.rememberme.rememberMe.domain.User;
+
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * Class {@code UserStrategyInterface} control the methods of UserStrategy.
  * <p>
@@ -23,8 +28,10 @@ public interface UserStrategyInterface {
     /**
      * Validates the given email according to specific criteria.
      *
-     * @param email is used to verify if the user exists in UserRepository
+     * @param typeVerification is used to verify if the user exists in UserRepository
+     * @return
      */
 
-    void validateIfUserExists(String email);
+    User validateIfUserExists(String typeVerification, String value);
+
 }
