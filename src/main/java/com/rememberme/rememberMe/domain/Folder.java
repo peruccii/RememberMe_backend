@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Class {@code domain/Folder} represent the entity of folder table.
@@ -37,8 +36,16 @@ public class Folder {
 
     private String title;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "folder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
+
+    public boolean IsNameGraterThan50(String value) {
+        return value.length() > 50;
+    }
 }
 
 
