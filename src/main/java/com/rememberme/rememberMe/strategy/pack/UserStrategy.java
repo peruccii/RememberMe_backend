@@ -3,17 +3,16 @@ package com.rememberme.rememberMe.strategy.pack;
 import com.rememberme.rememberMe.domain.User;
 import com.rememberme.rememberMe.exceptions.DataAlreadyExistsException;
 import com.rememberme.rememberMe.exceptions.DataBadRequestExcpetion;
-import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
+import com.rememberme.rememberMe.exceptions.DataNotFoundExcpetion;
 import com.rememberme.rememberMe.repositories.IUserRepository;
 import com.rememberme.rememberMe.strategy.pack.passwordStrategy.PasswordStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Class {@code UserStrategy} manages all user-related strategies.
@@ -34,12 +33,13 @@ public class UserStrategy {
     @Service
     public static class UserValidations implements UserStrategyInterface {
 
-        @Autowired
-        private IUserRepository userRepository;
+
+        private final IUserRepository userRepository;
 
         private final PasswordStrategy passwordStrategy;
 
-        public UserValidations(PasswordStrategy passwordStrategy) {
+        public UserValidations(IUserRepository userRepository, PasswordStrategy passwordStrategy) {
+            this.userRepository = userRepository;
             this.passwordStrategy = passwordStrategy;
         }
 
@@ -58,11 +58,18 @@ public class UserStrategy {
         }
 
         @Override
-        public void validateIfUserExists(String email) {
-            Optional<User> responseUser = this.userRepository.findByEmail(email);
-            responseUser.ifPresent(event -> {
-                throw new DataAlreadyExistsException("USER ALREADY EXISTS IN DATABASE");
-            });
+        public User validateIfUserExists(String typeVerification, String value) {
+            switch (typeVerification) {
+                case "id" -> {
+                    return this.userRepository.findById(UUID.fromString(value)).orElseThrow(
+                            () -> new DataNotFoundExcpetion("USER DOES NOT EXISTS"));
+                }
+                case "email" -> {
+                    return this.userRepository.findByEmail(value).orElseThrow(
+                            () -> new DataNotFoundExcpetion("USER DOES NOT EXISTS"));
+                }
+                default -> throw new RuntimeException("NO TYPE VERIFICATION SELECTED");
+            }
         }
     }
 }
