@@ -46,7 +46,7 @@ public class AuthService {
 
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+    public AuthService(IUserRepository userRepository,  UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
         this.userRepository = userRepository;
         this.userStrategyInterface = userStrategyInterface;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
