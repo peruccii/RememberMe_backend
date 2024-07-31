@@ -44,15 +44,13 @@ public class AuthService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final EmailService emailService;
-
     private final JwtEncoder jwtEncoder;
 
     public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, JwtEncoder jwtEncoder) {
         this.userRepository = userRepository;
         this.userStrategyInterface = userStrategyInterface;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-        this.emailService = emailService;
+
         this.jwtEncoder = jwtEncoder;
     }
 
@@ -60,9 +58,6 @@ public class AuthService {
 //        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
 
         this.userStrategyInterface.validate(userPayload.password());
-
-        // TODO: getInstance factory create subject & text
-        this.emailService.sendEmail("peruccii2917@hotmail.com", "subject", "text");
 
         var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
 
