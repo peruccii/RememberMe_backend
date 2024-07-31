@@ -4,6 +4,7 @@
 
 package com.rememberme.rememberMe.domain;
 
+import com.rememberme.rememberMe.domain.enums.TypeSituationUser;
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -46,6 +47,10 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private TypeSituationUser situation;
+
     private BigDecimal balance = BigDecimal.ZERO;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -59,6 +64,7 @@ public class User {
         this.email = email;
         this.password = password;
         this.balance = balance;
+        this.situation = TypeSituationUser.PENDING;
     }
 
     public User() {

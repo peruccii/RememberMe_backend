@@ -44,7 +44,7 @@ public class UserStrategy {
         }
 
         @Override
-        public void validate(String password) {
+        public void validate(String password) { // 100% Strategy pattern
             List<String> failures = new ArrayList<>();
 
             this.passwordStrategy.minCharactersValidator(password, failures);

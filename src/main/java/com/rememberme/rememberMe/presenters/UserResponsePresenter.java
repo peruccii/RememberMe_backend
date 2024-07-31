@@ -7,6 +7,8 @@ public record UserResponsePresenter(
 
         String name,
 
-        String email
+        String email,
+
+        com.rememberme.rememberMe.domain.enums.TypeSituationUser situation
 ) {
 }

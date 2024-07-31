@@ -1,5 +1,6 @@
 package com.rememberme.rememberMe.services;
 
+import com.rememberme.rememberMe.domain.enums.TypeSituationUser;
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
 import com.rememberme.rememberMe.dtos.UserRequestDTO;
 import com.rememberme.rememberMe.exceptions.DataNotFoundExcpetion;
@@ -43,26 +44,33 @@ public class AuthService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final EmailService emailService;
 
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+    public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, EmailService emailService, JwtEncoder jwtEncoder) {
         this.userRepository = userRepository;
         this.userStrategyInterface = userStrategyInterface;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailService = emailService;
         this.jwtEncoder = jwtEncoder;
     }
 
     public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) {
-        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
+//        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
+
         this.userStrategyInterface.validate(userPayload.password());
+
+        // TODO: getInstance factory create subject & text
+        this.emailService.sendEmail("peruccii2917@hotmail.com", "subject", "text");
 
         var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponsePresenter(
                 user.getId(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getSituation()
         ));
     }
 
