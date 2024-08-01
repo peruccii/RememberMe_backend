@@ -1,14 +1,18 @@
 package com.rememberme.rememberMe.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rememberme.rememberMe.domain.enums.TypeSituationUser;
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
+import com.rememberme.rememberMe.dtos.EmailSenderDTO;
 import com.rememberme.rememberMe.dtos.UserRequestDTO;
 import com.rememberme.rememberMe.exceptions.DataNotFoundExcpetion;
 import com.rememberme.rememberMe.presenters.AuthResponsePresenter;
 import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
 import com.rememberme.rememberMe.presenters.UserResponsePresenter;
+import com.rememberme.rememberMe.producers.EmailProducer;
 import com.rememberme.rememberMe.repositories.IUserRepository;
 import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,30 +40,38 @@ import java.time.Instant;
 @Service
 public class AuthService {
 
-
     private final IUserRepository userRepository;
-
 
     private final  UserStrategyInterface userStrategyInterface;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final EmailProducer emailProducer;
+
+    private final EmailSender smtpMailSender;
+
     private final JwtEncoder jwtEncoder;
 
-    public AuthService(IUserRepository userRepository,  UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, JwtEncoder jwtEncoder) {
+    public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, EmailProducer emailProducer, EmailSender smtpMailSender, JwtEncoder jwtEncoder) {
         this.userRepository = userRepository;
         this.userStrategyInterface = userStrategyInterface;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.emailProducer = emailProducer;
+        this.smtpMailSender = smtpMailSender;
 
         this.jwtEncoder = jwtEncoder;
     }
 
-    public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) {
+    public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) throws JsonProcessingException {
 //        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
 
         this.userStrategyInterface.validate(userPayload.password());
 
         var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
+
+        this.emailProducer.sendEmailProducer(new EmailSenderDTO(
+                userPayload.email()
+        ));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponsePresenter(
                 user.getId(),
