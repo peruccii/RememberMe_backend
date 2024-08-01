@@ -8,7 +8,7 @@ import java.util.UUID;
 public class FolderStrategy {
 
 
-    @Service
+    @Service // TODO: Change to @Component
     public static class FolderValidations implements FolderStrategyInterface {
 
         private final IFolderRepository folderRepository;

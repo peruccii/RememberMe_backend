@@ -67,8 +67,7 @@ public class User {
         this.situation = TypeSituationUser.PENDING;
     }
 
-    public User() {
-    }
+    public User() {}
 
     public boolean isAuthCorrect(AuthRequestDTO authRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(authRequest.password(), this.password);

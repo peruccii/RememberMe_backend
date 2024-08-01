@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public class UserStrategy {
 
-    @Service
+    @Service // TODO: Change to @Component
     public static class UserValidations implements UserStrategyInterface {
 
 

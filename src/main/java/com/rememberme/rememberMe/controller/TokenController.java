@@ -1,11 +1,13 @@
 
 package com.rememberme.rememberMe.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rememberme.rememberMe.dtos.AuthRequestDTO;
 import com.rememberme.rememberMe.dtos.UserRequestDTO;
 import com.rememberme.rememberMe.presenters.AuthResponsePresenter;
 import com.rememberme.rememberMe.presenters.UserResponsePresenter;
 import com.rememberme.rememberMe.services.AuthService;
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +56,7 @@ public class TokenController {
      */
     @Transactional
     @PostMapping("/user")
-    public ResponseEntity<UserResponsePresenter> create(@Valid @RequestBody UserRequestDTO userPayload) {
+    public ResponseEntity<UserResponsePresenter> create(@Valid @RequestBody UserRequestDTO userPayload) throws JsonProcessingException {
         return this.authService.createUser(userPayload);
     }
 
