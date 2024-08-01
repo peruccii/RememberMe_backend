@@ -1,0 +1,14 @@
+# Ignore the .env file
+.env
+
+# Other common ignores
+target/
+*.log
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.DS_Store
+.idea/
+*.swp
