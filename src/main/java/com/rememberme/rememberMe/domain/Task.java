@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -37,7 +39,9 @@ public class Task {
 
     private String description;
 
-    private String coast;
+    private Float coast;
+
+    private LocalDateTime alertAt;
 
     @OneToOne
     @JoinColumn(name = "alert_id")

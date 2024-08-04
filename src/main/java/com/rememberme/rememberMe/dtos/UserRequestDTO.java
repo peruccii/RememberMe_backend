@@ -11,19 +11,13 @@ import java.math.BigDecimal;
 
 public record UserRequestDTO(
 
-        @NotBlank(message = "NAME IS REQUIRED")
         String name,
 
-        @NotNull(message = "EMAIL IS REQUIRED")
-        @NotEmpty(message = "EMAIL IS REQUIRED")
-        @NotBlank(message = "EMAIL IS REQUIRED")
         String email,
 
-        @NotBlank(message = "PASSWORD IS REQUIRED")
         String password,
 
         BigDecimal balance
-
 
 ) {
 

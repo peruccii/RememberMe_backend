@@ -17,7 +17,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -48,8 +47,6 @@ public class AuthService {
 
     private final EmailProducer emailProducer;
 
-    private final EmailSender smtpMailSender;
-
     private final JwtEncoder jwtEncoder;
 
     public AuthService(IUserRepository userRepository, UserStrategyInterface userStrategyInterface, BCryptPasswordEncoder bCryptPasswordEncoder, EmailProducer emailProducer, EmailSender smtpMailSender, JwtEncoder jwtEncoder) {
@@ -57,8 +54,6 @@ public class AuthService {
         this.userStrategyInterface = userStrategyInterface;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.emailProducer = emailProducer;
-        this.smtpMailSender = smtpMailSender;
-
         this.jwtEncoder = jwtEncoder;
     }
 

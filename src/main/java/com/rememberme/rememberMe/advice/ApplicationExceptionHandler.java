@@ -38,6 +38,14 @@ public class ApplicationExceptionHandler {
       return errorMap;
     }
 
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    @ExceptionHandler(RememberMeExceptions.class)
+//    public Map<String, String> handleBusinessException(RememberMeExceptions ex) {
+//        Map<String, String> errorMap = new HashMap<>();
+//        errorMap.put("errorMessage", ex.getMessage());
+//        return errorMap;
+//    }
+
     @ExceptionHandler(RememberMeExceptions.class)
     public ResponseEntity<RuntimeExceptionPresenter> handleRememberMeException(RememberMeExceptions e) {
         return e.toProblemDetail();

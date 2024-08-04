@@ -26,23 +26,15 @@ public class Alert {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String title;
+
     private String type_alert;
 
-    public Long getAlertId() {
-        return id;
-    }
+    @OneToOne
+    @JoinColumn(name = "task_id")
+    private Task task;
 
-    public void setAlertId(Long id) {
-        this.id = id;
-    }
-
-    public String getType() {
-        return type_alert;
-    }
-
-    public void setTypeAlert(String type_alert) {
-        this.type_alert = type_alert;
-    }
+    public Alert() {}
 
     public enum Values {
         PENDING(1L),
