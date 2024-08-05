@@ -38,7 +38,8 @@ public class Alert {
 
     public enum Values {
         PENDING(1L),
-        OK(2L);
+        OK(2L),
+        TODAY(3L);
 
         Long id;
 

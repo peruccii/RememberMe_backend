@@ -23,7 +23,7 @@ public class AlertService {
         tasksToSendAlert.forEach(map -> {
             Alert alert = new Alert();
             alert.setTitle(map.getName());
-            alert.setType_alert(Alert.Values.OK.name());
+            alert.setType_alert(Alert.Values.TODAY.name());
         });
 
     }
