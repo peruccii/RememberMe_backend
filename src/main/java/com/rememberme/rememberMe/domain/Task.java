@@ -43,6 +43,8 @@ public class Task {
 
     private LocalDateTime alertAt;
 
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @OneToOne
     @JoinColumn(name = "alert_id")
     private Alert alert;
