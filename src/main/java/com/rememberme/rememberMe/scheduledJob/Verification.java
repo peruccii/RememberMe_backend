@@ -7,9 +7,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+
+import static com.rememberme.rememberMe.scheduledJob.SplitDateTimeRangeInEqualIntervals.splitDateTimeRangesInEqualIntervals;
 
 @Component
 public class Verification {
@@ -27,16 +30,29 @@ public class Verification {
 
         ZoneId brazilZoneId = ZoneId.of("America/Sao_Paulo");
         ZonedDateTime nowInBrazil = ZonedDateTime.now(brazilZoneId);
-        LocalDate todayInBrazil = nowInBrazil.toLocalDate();
+        LocalDate todayInBrazilLocalDate = nowInBrazil.toLocalDate();
 
         // A list of tasks with the sames dates today
-        List<Task> tasks = this.taskRepository.findByAlertAt(todayInBrazil);
+        List<Task> tasks = this.taskRepository.findByAlertAt(todayInBrazilLocalDate);
 
         // A list of tasks ids with the sames dates today
         List<Long> tasksIds = tasks.stream().map(Task::getId).toList();
 
-        this.alertService.sendAlert(tasksIds);
+        // A list all tasks
+        List<Task> AllTasks = this.taskRepository.findAll();
 
+        // Days to alert of all tasks
+        List<LocalDateTime> daysToAlert =  AllTasks.stream().map(Task::getAlertAt).toList();
+
+        // Days of the creations of the tasks
+        List<LocalDateTime> tasksCreatedAt =  AllTasks.stream().map(Task::getCreatedAt).toList();
+
+
+        // List of dates to send alert
+        List<LocalDateTime> intervals = splitDateTimeRangesInEqualIntervals(
+                tasksCreatedAt, daysToAlert, 3);
+
+        this.alertService.sendAlert(tasksIds);
     }
 }
 
