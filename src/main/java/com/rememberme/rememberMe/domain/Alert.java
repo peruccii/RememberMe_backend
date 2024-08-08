@@ -4,6 +4,7 @@ package com.rememberme.rememberMe.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
 /**
  * Class {@code domain/Alert} represent the entity of alert table.
@@ -30,7 +31,7 @@ public class Alert {
 
     private String type_alert;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "task_id")
     private Task task;
 

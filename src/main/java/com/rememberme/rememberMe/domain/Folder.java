@@ -36,6 +36,9 @@ public class Folder {
 
     private String title;
 
+    @Lob
+    private List<byte[]> files;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;

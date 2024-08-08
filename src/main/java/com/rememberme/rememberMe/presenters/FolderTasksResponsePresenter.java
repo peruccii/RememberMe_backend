@@ -2,6 +2,7 @@ package com.rememberme.rememberMe.presenters;
 
 import com.rememberme.rememberMe.domain.Alert;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record FolderTasksResponsePresenter(
@@ -9,8 +10,9 @@ public record FolderTasksResponsePresenter(
         String title,
         String description,
         Float coast,
-        LocalDateTime alertAt,
-        Alert alert,
-        Long folderId
+        LocalDate alertAt,
+        Object alert,
+        Long folderId,
+        LocalDateTime createdAt
 ) {
 }

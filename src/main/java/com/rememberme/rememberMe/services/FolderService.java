@@ -5,7 +5,7 @@ import com.rememberme.rememberMe.dtos.FolderRequestDTO;
 import com.rememberme.rememberMe.presenters.FolderResponsePresenter;
 import com.rememberme.rememberMe.repositories.IFolderRepository;
 import com.rememberme.rememberMe.strategy.pack.FolderStrategyInterface;
-import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
+import com.rememberme.rememberMe.strategy.pack.userStrategy.UserStrategyInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -31,7 +31,7 @@ public class FolderService {
     }
 
     public ResponseEntity<FolderResponsePresenter> createFolder(FolderRequestDTO payload, JwtAuthenticationToken token) {
-        var userResponse = this.userStrategy.validateIfUserExists("id", token.getName());
+        var userResponse = this.userStrategy.validateUserExists("id", token.getName());
         this.folderStrategy.validateTitle(payload.title());
         this.folderStrategy.validateSameTitle(payload.title(), UUID.fromString(token.getName()));
 

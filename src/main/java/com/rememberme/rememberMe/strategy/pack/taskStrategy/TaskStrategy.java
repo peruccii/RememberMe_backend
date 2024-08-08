@@ -1,10 +1,8 @@
 package com.rememberme.rememberMe.strategy.pack.taskStrategy;
 
-import com.rememberme.rememberMe.exceptions.DataBadRequestExcpetion;
+import com.rememberme.rememberMe.domain.Task;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class TaskStrategy {
 
@@ -17,15 +15,25 @@ public class TaskStrategy {
             this.taskValidators = taskValidators;
         }
 
+//        @Override
+//        public void validate(String value) {
+//            List<String> failures = new ArrayList<>();
+//
+//            this.taskValidators.validateIfExists(value);
+//            this.taskValidators.validateSameTitle(value);
+//
+//            if (!failures.isEmpty()) throw new DataBadRequestExcpetion(failures.toString());
+//
+//        }
+
         @Override
-        public void validate(String value) {
-            List<String> failures = new ArrayList<>();
+        public Task validateTaskExists(String typeVerification, String value) {
+            return this.taskValidators.validateIfTaskExists(typeVerification, value);
+        }
 
-            this.taskValidators.validateIfExists(value, failures);
-            this.taskValidators.validateSameTitle(value, failures);
-
-            if (!failures.isEmpty()) throw new DataBadRequestExcpetion(failures.toString());
-
+        @Override
+        public void validateSameTitleTask(String value) {
+           this.taskValidators.validateSameTitle(value);
         }
     }
 }

@@ -11,7 +11,7 @@ import com.rememberme.rememberMe.presenters.PasswordFailurePresenter;
 import com.rememberme.rememberMe.presenters.UserResponsePresenter;
 import com.rememberme.rememberMe.producers.EmailProducer;
 import com.rememberme.rememberMe.repositories.IUserRepository;
-import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
+import com.rememberme.rememberMe.strategy.pack.userStrategy.UserStrategyInterface;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class AuthService {
 
     private final IUserRepository userRepository;
 
-    private final  UserStrategyInterface userStrategyInterface;
+    private final UserStrategyInterface userStrategyInterface;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -59,8 +59,9 @@ public class AuthService {
 
     public ResponseEntity<UserResponsePresenter> createUser( UserRequestDTO userPayload) throws JsonProcessingException {
 //        this.userStrategyInterface.validateIfUserExists("email", userPayload.email());
+        this.userStrategyInterface.validateEmail(userPayload.email());
 
-        this.userStrategyInterface.validate(userPayload.password());
+        this.userStrategyInterface.validatePassword(userPayload.password());
 
         var user = this.userRepository.save(userPayload.toUser(bCryptPasswordEncoder));
 

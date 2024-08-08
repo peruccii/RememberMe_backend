@@ -7,7 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -41,11 +43,11 @@ public class Task {
 
     private Float coast;
 
-    private LocalDateTime alertAt;
+    private LocalDate alertAt;
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "alert_id")
     private Alert alert;
 

@@ -3,7 +3,7 @@ package com.rememberme.rememberMe.services;
 import com.rememberme.rememberMe.domain.Folder;
 import com.rememberme.rememberMe.dtos.FolderRequestDTO;
 import com.rememberme.rememberMe.presenters.UserFoldersPresenter;
-import com.rememberme.rememberMe.strategy.pack.UserStrategyInterface;
+import com.rememberme.rememberMe.strategy.pack.userStrategy.UserStrategyInterface;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserService {
     }
 
     public ResponseEntity<UserFoldersPresenter> listUserFolders(JwtAuthenticationToken token) {
-        var userResponse = this.userStrategy.validateIfUserExists("id", token.getName());
+        var userResponse = this.userStrategy.validateUserExists("id", token.getName());
 
         List<Folder> folders = this.folderService.consultFolders(UUID.fromString(token.getName()));
 

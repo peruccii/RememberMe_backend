@@ -1,5 +1,8 @@
 package com.rememberme.rememberMe.strategy.pack.taskStrategy;
 
+import com.rememberme.rememberMe.domain.Task;
+
 public interface TaskStrategyInterface {
-    void validate(String value);
+    Task validateTaskExists(String typeVerification, String value);
+    void validateSameTitleTask(String value);
 }

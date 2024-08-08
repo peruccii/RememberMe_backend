@@ -25,32 +25,32 @@ public class Verification {
         this.alertService = alertService;
     }
 
-    @Scheduled(fixedDelay = 3600000) // TODO: Move fixedDelay to env variable
+    @Scheduled(fixedDelay = 60000) // TODO: Move fixedDelay to env variable
     public void verify(){
 
         ZoneId brazilZoneId = ZoneId.of("America/Sao_Paulo");
         ZonedDateTime nowInBrazil = ZonedDateTime.now(brazilZoneId);
-        LocalDate todayInBrazilLocalDate = nowInBrazil.toLocalDate();
-
+        LocalDate todayInBrazilLocal = nowInBrazil.toLocalDate();
+        System.out.println(todayInBrazilLocal);
         // A list of tasks with the sames dates today
-        List<Task> tasks = this.taskRepository.findByAlertAt(todayInBrazilLocalDate);
+        List<Task> tasks = this.taskRepository.findByAlertAt(todayInBrazilLocal);
 
         // A list of tasks ids with the sames dates today
         List<Long> tasksIds = tasks.stream().map(Task::getId).toList();
 
-        // A list all tasks
-        List<Task> AllTasks = this.taskRepository.findAll();
-
-        // Days to alert of all tasks
-        List<LocalDateTime> daysToAlert =  AllTasks.stream().map(Task::getAlertAt).toList();
-
-        // Days of the creations of the tasks
-        List<LocalDateTime> tasksCreatedAt =  AllTasks.stream().map(Task::getCreatedAt).toList();
-
-
-        // List of dates to send alert
-        List<LocalDateTime> intervals = splitDateTimeRangesInEqualIntervals(
-                tasksCreatedAt, daysToAlert, 3);
+//        // A list all tasks
+//        List<Task> AllTasks = this.taskRepository.findAll();
+//
+//        // Days to alert of all tasks
+//        List<LocalDateTime> daysToAlert =  AllTasks.stream().map(Task::getAlertAt).toList();
+//
+//        // Days of the creations of the tasks
+//        List<LocalDateTime> tasksCreatedAt =  AllTasks.stream().map(Task::getCreatedAt).toList();
+//
+//
+//        // List of dates to send alert
+//        List<LocalDateTime> intervals = splitDateTimeRangesInEqualIntervals(
+//                tasksCreatedAt, daysToAlert, 3);
 
         this.alertService.sendAlert(tasksIds);
     }

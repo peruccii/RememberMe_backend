@@ -1,6 +1,7 @@
 package com.rememberme.rememberMe.strategy.pack;
 import com.rememberme.rememberMe.exceptions.DataBadRequestExcpetion;
 import com.rememberme.rememberMe.repositories.IFolderRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -8,7 +9,7 @@ import java.util.UUID;
 public class FolderStrategy {
 
 
-    @Service // TODO: Change to @Component
+    @Component
     public static class FolderValidations implements FolderStrategyInterface {
 
         private final IFolderRepository folderRepository;
