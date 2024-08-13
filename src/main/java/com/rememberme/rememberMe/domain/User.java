@@ -65,6 +65,12 @@ public class User {
         this.password = password;
         this.balance = balance;
         this.situation = TypeSituationUser.PENDING;
+
+        validate();
+    }
+
+    public void validate() {
+        // some validations
     }
 
     public User() {}

@@ -2,6 +2,7 @@ package com.rememberme.rememberMe.repositories;
 
 import com.rememberme.rememberMe.domain.Task;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,6 +23,6 @@ public interface ITaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findAllByFolderId(Long folderId);
 
-    @Query()
-    Page<Task> getAllTasksByTypeAlert(@Param("type_alert") String type_alert);
+    @Query("SELECT t FROM Task t JOIN Alert a ON a.id = a.task.id WHERE (:type_alert = '' OR a.type_alert LIKE %:type_alert%)")
+    Page<Task> findAllTasksByTypeAlert(@Param("type_alert") String type_alert, Pageable pageable);
 }

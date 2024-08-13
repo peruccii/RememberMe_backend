@@ -3,6 +3,7 @@ package com.rememberme.rememberMe.controller;
 import com.rememberme.rememberMe.dtos.TaskRequestDTO;
 import com.rememberme.rememberMe.presenters.FolderTasksResponsePresenter;
 import com.rememberme.rememberMe.presenters.TaskResponsePresenter;
+import com.rememberme.rememberMe.presenters.TasksFilteredResponsePresenter;
 import com.rememberme.rememberMe.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -31,5 +32,14 @@ public class TaskController {
     public ResponseEntity<List<FolderTasksResponsePresenter>> getFolderTasks(
             @PathVariable Long folderId) {
         return this.taskService.getFolderTasks(folderId);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TasksFilteredResponsePresenter>> getTasksFiltered(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String type_alert
+    ) {
+        return this.taskService.getAllTasks(page, size, type_alert);
     }
 }

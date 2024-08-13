@@ -9,6 +9,7 @@ import com.rememberme.rememberMe.exceptions.DataNotFoundExcpetion;
 import com.rememberme.rememberMe.presenters.AlertResponsePresenter;
 import com.rememberme.rememberMe.presenters.FolderTasksResponsePresenter;
 import com.rememberme.rememberMe.presenters.TaskResponsePresenter;
+import com.rememberme.rememberMe.presenters.TasksFilteredResponsePresenter;
 import com.rememberme.rememberMe.repositories.IFolderRepository;
 import com.rememberme.rememberMe.repositories.ITaskRepository;
 import com.rememberme.rememberMe.repositories.IUserRepository;
@@ -102,12 +103,29 @@ public class TaskService {
     }
 
 
-    public ResponseEntity<List<FolderTasksResponsePresenter>> getAllTasks(int page, int size){
+    public ResponseEntity<List<TasksFilteredResponsePresenter>> getAllTasks(int page, int size, String type_alert){
         Pageable pageable = PageRequest.of(page, size);
-        Page<Task> tasks = this.taskRepository.findAll(pageable);
+        Page<Task> tasks = this.taskRepository.findAllTasksByTypeAlert(type_alert, pageable);
 
 
-        return null;
+        Object foldersPresenter = tasks.stream().map(task -> new AlertResponsePresenter(
+                task.getAlert().getId(),
+                task.getAlert().getTitle(),
+                task.getAlert().getType_alert()
+        )).toArray();
+
+        List<TasksFilteredResponsePresenter> tasksResponse = tasks.stream().map(map -> new TasksFilteredResponsePresenter(
+                map.getId(),
+                map.getName(),
+                map.getDescription(),
+                map.getCoast(),
+                map.getAlertAt(),
+                foldersPresenter,
+                map.getFolder().getId(),
+                map.getCreatedAt()
+        )).toList();
+
+        return ResponseEntity.ok(tasksResponse);
     }
 
     public ResponseEntity<TaskResponsePresenter> updateTask(TaskRequestDTO payload, Long taskId) {
